@@ -1,0 +1,91 @@
+$ ng new <app_name> --no-standalone
+$ cd <app_name>
+$ ng generate component employee-registration
+                ( or )
+$ ng g c employee-registration
+
+1. Goto  "employee-regisrtation.component.ts" file and write the code 
+        
+            import { Component } from '@angular/core';
+            import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
+
+            @Component({
+            selector: 'app-employee-registration',
+            standalone: false,
+            templateUrl: './employee-registration.component.html',
+            styleUrls: ['./employee-registration.component.css']
+            })
+            export class EmployeeRegistrationComponent {
+            employeeForm: FormGroup;
+
+            constructor(private fb: FormBuilder) {
+                this.employeeForm = this.fb.group({
+                email: ['', [Validators.required, this.emailValidator]]
+                });
+            }
+
+            emailValidator(control: AbstractControl) {
+                if (!control.value.includes('@')) {
+                return { invalidEmail: true };
+                }
+                return null;
+            }
+
+            onSubmit() {
+                if (this.employeeForm.valid) {
+                console.log(this.employeeForm.value);
+                }
+            }
+            }
+
+2. Goto  "employee-regisrtation.component.html" file and write the code 
+
+            <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+                <div>
+                <label for="email">Email:</label>
+                <input type="email" id="email" formControlName="email">
+                
+                <div *ngIf="employeeForm.get('email')?.touched">
+                    <div *ngIf="employeeForm.get('email')?.errors?.['required']">
+                    Email is required
+                    </div>
+                    <div *ngIf="employeeForm.get('email')?.errors?.['invalidEmail']">
+                    Please include &#64; in email
+                    </div>
+                </div>
+                </div>
+            
+                <button type="submit" [disabled]="!employeeForm.valid">Submit</button>
+            </form>
+            
+
+3. Goto  "app.module.ts" file and write the code 
+
+            import { NgModule } from '@angular/core';
+            import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
+            import { ReactiveFormsModule } from '@angular/forms'; // HAVE TO WRITE THIS
+            import { AppRoutingModule } from './app-routing.module';
+            import { AppComponent } from './app.component';
+            import { EmployeeRegistrationComponent } from './employee-registration/employee-registration.component';
+
+            @NgModule({
+            declarations: [
+                AppComponent,
+                EmployeeRegistrationComponent
+            ],
+            imports: [
+                BrowserModule,
+                AppRoutingModule, // HAVE TO ', = COMMA ' WRITE THIS
+                ReactiveFormsModule // HAVE TO WRITE THIS
+            ],
+            providers: [
+                provideClientHydration(withEventReplay())
+            ],
+            bootstrap: [AppComponent]
+            })
+            export class AppModule { }
+
+
+4. Goto  "app.component.html" file and write the code
+
+            <app-employee-registration></app-employee-registration>
