@@ -191,8 +191,8 @@ This project demonstrates the use of Angular's `ViewEncapsulation` options to co
 
 1. Create a new Angular application:
      ```bash
-     $ ng new app3
-     $ cd app3
+     ng new app3
+     cd app3
      ```
 
 2. Generate two components:
