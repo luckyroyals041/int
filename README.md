@@ -1,4 +1,4 @@
-# Employee Registration Form in Angular
+# 2. Employee Registration Form
 
 This documentation provides step-by-step instructions for creating an Angular application with an employee registration form using reactive forms.
 
