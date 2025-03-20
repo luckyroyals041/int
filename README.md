@@ -1,3 +1,50 @@
+# 1. Displaying a List of Courses
+
+This Angular application demonstrates the creation of a simple component that displays a list of courses using the `*ngFor` structural directive.
+
+## Steps to Create the Application
+
+1. **Create a New Angular Application**  
+    Use the Angular CLI command to create a new application:
+    ```bash
+    ng new app1
+    cd app1
+    ```
+
+2. **Update `app.component.html`**  
+    Add the following code to the `app.component.html` file:
+    ```html
+    <h2>Courses</h2>
+    <ol>
+         <li *ngFor="let course of courses">
+              {{ course }}
+         </li>
+    </ol>
+    ```
+
+3. **Update `app.component.ts`**  
+    Add the following code to the `app.component.ts` file:
+    ```typescript
+    import { Component } from '@angular/core';
+    import { CommonModule } from '@angular/common';
+
+    @Component({
+         selector: 'app-root',
+         imports: [CommonModule],
+         templateUrl: './app.component.html',
+         styleUrls: ['./app.component.css']
+    })
+    export class AppComponent {
+         title = 'app1';
+         courses = ['course1', 'course2', 'course3'];
+    }
+    ```
+
+## Output
+
+When you run the application, it will display a list of courses (`course1`, `course2`, `course3`) in an ordered list.
+
+
 # 2. Employee Registration Form
 
 This documentation provides step-by-step instructions for creating an Angular application with an employee registration form using reactive forms.
