@@ -63,11 +63,11 @@ npm install -g @angular/cli
 
 1. Create a new Angular project:
     ```bash
-    ng new <app_name> --no-standalone
+    ng new app2 --no-standalone
     ```
 2. Navigate to the project directory:
     ```bash
-    cd <app_name>
+    cd app2
     ```
 3. Generate a new component named `employee-registration`:
     ```bash
