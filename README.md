@@ -348,6 +348,31 @@ This project highlights the differences between Angular's style encapsulation op
 
 By comparing the behavior of these two components, you can better understand how to manage style isolation in Angular applications.
 
+# Image Binding 
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-image-binding',
+  templateUrl: './image-binding.component.html',
+  styleUrls: ['./image-binding.component.css']
+})
+export class ImageBindingComponent {
+  imageUrl: string = 'https://via.placeholder.com/150';
+
+  changeImage() {
+    this.imageUrl = 'https://via.placeholder.com/300';
+  }
+}
+```
+```html
+<div>
+  <img [src]="imageUrl" alt="Dynamic Image" />
+  <button (click)="changeImage()">Change Image</button>
+</div>
+```
+
+
 # Employee Registration Form 
 ```ts
 import { Component } from '@angular/core';
@@ -371,4 +396,45 @@ export class EmployeeRegistrationComponent {
     console.log(this.employeeForm.value);
   }
 }
+```
+```html
+<div>
+  <h2>Employee Registration Form</h2>
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+    <label for="name">Name:</label>
+    <input id="name" type="text" formControlName="name" />
+    <div *ngIf="employeeForm.get('name')?.invalid && employeeForm.get('name')?.touched">
+      <small *ngIf="employeeForm.get('name')?.errors?.['required']">Name is required.</small>
+      <small *ngIf="employeeForm.get('name')?.errors?.['pattern']">Only letters are allowed.</small>
+    </div>
+
+    <label for="email">Email:</label>
+    <input id="email" type="email" formControlName="email" />
+    <div *ngIf="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched">
+      <small *ngIf="employeeForm.get('email')?.errors?.['required']">Email is required.</small>
+      <small *ngIf="employeeForm.get('email')?.errors?.['email']">Invalid email format.</small>
+    </div>
+
+    <label for="phone">Phone:</label>
+    <input id="phone" type="text" formControlName="phone" />
+    <div *ngIf="employeeForm.get('phone')?.invalid && employeeForm.get('phone')?.touched">
+      <small *ngIf="employeeForm.get('phone')?.errors?.['required']">Phone number is required.</small>
+      <small *ngIf="employeeForm.get('phone')?.errors?.['pattern']">Enter a valid 10-digit number.</small>
+    </div>
+
+    <label for="designation">Designation:</label>
+    <input id="designation" type="text" formControlName="designation" />
+    <div *ngIf="employeeForm.get('designation')?.invalid && employeeForm.get('designation')?.touched">
+      <small>Designation is required.</small>
+    </div>
+
+    <label for="address">Address:</label>
+    <textarea id="address" formControlName="address"></textarea>
+    <div *ngIf="employeeForm.get('address')?.invalid && employeeForm.get('address')?.touched">
+      <small>Address is required.</small>
+    </div>
+
+    <button type="submit" [disabled]="employeeForm.invalid">Register</button>
+  </form>
+</div>
 ```
