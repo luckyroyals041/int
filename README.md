@@ -438,3 +438,61 @@ export class EmployeeRegistrationComponent {
   </form>
 </div>
 ```
+# Login Form
+```ts
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent {
+  username: string = '';
+  password: string = '';
+  message: string = '';
+
+  // Predefined correct credentials
+  correctUsername: string = 'user123';
+  correctPassword: string = 'password123';
+
+  onLogin() {
+    if (this.username === this.correctUsername && this.password === this.correctPassword) {
+      this.message = `Welcome ${this.username}`;
+    } else {
+      this.message = 'Invalid Login!!! Please try again...';
+    }
+  }
+}
+```
+```html
+<div>
+  <h2>Login Form</h2>
+  <form (ngSubmit)="onLogin()">
+    <label for="username">Username:</label>
+    <input id="username" type="text" [(ngModel)]="username" name="username" required />
+    
+    <label for="password">Password:</label>
+    <input id="password" type="password" [(ngModel)]="password" name="password" required />
+
+    <button type="submit">Login</button>
+  </form>
+
+  <p>{{ message }}</p>
+</div>
+```
+```ts
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
+import { AppComponent } from './app.component';
+import { LoginComponent } from './login/login.component';
+
+@NgModule({
+  declarations: [AppComponent, LoginComponent],
+  imports: [BrowserModule, FormsModule],
+  providers: [],
+  bootstrap: [AppComponent]
+})
+export class AppModule {}
+```
