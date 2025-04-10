@@ -347,3 +347,28 @@ This project highlights the differences between Angular's style encapsulation op
 - **No Encapsulation (`ViewEncapsulation.None`)**: Allows styles to leak and affect other components.
 
 By comparing the behavior of these two components, you can better understand how to manage style isolation in Angular applications.
+
+# Employee Registration Form 
+```ts
+import { Component } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+
+@Component({
+  selector: 'app-employee-registration',
+  templateUrl: './employee-registration.component.html',
+  styleUrls: ['./employee-registration.component.css']
+})
+export class EmployeeRegistrationComponent {
+  employeeForm = new FormGroup({
+    name: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]),
+    email: new FormControl('', [Validators.required, Validators.email]),
+    phone: new FormControl('', [Validators.required, Validators.pattern('[0-9]{10}')]),
+    designation: new FormControl('', Validators.required),
+    address: new FormControl('', Validators.required),
+  });
+
+  onSubmit() {
+    console.log(this.employeeForm.value);
+  }
+}
+```
