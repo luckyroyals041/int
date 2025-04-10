@@ -439,6 +439,7 @@ export class EmployeeRegistrationComponent {
 </div>
 ```
 # Login Form
+### app.component.ts
 ```ts
 import { Component } from '@angular/core';
 
@@ -465,6 +466,7 @@ export class LoginComponent {
   }
 }
 ```
+### app.component.html
 ```html
 <div>
   <h2>Login Form</h2>
@@ -481,6 +483,7 @@ export class LoginComponent {
   <p>{{ message }}</p>
 </div>
 ```
+### app.module.ts
 ```ts
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
