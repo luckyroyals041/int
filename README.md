@@ -499,3 +499,110 @@ import { LoginComponent } from './login/login.component';
 })
 export class AppModule {}
 ```
+
+---
+# Course list Registration 
+### **Aim**
+To create an Angular app where the `AppComponent` loads the `CoursesListComponent`, which displays a list of courses in a table. Each row includes a "Register" button that sends the course name back to `AppComponent`. The `AppComponent` then displays a "Registration Successful" message with the course name.
+
+---
+
+### **Description**
+This app involves component interaction in Angular, showcasing parent-child communication using event binding and property binding. The `CoursesListComponent` acts as the child component and passes data (courseName) back to the parent (`AppComponent`) using `@Output` and an event emitter. The parent component displays the message based on the data received from the child component.
+
+---
+
+### **Program**
+
+#### **1. AppComponent**
+
+##### `app.component.ts`
+```typescript
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent {
+  registrationMessage: string = '';
+
+  onCourseRegistered(courseName: string) {
+    this.registrationMessage = `Registration Successful for ${courseName}`;
+  }
+}
+```
+
+##### `app.component.html`
+```html
+<div>
+  <h1>Course Registration</h1>
+  <app-courses-list (courseRegistered)="onCourseRegistered($event)"></app-courses-list>
+  <p>{{ registrationMessage }}</p>
+</div>
+```
+
+---
+
+#### **2. CoursesListComponent**
+
+##### `courses-list.component.ts`
+```typescript
+import { Component, EventEmitter, Output } from '@angular/core';
+
+@Component({
+  selector: 'app-courses-list',
+  templateUrl: './courses-list.component.html',
+  styleUrls: ['./courses-list.component.css']
+})
+export class CoursesListComponent {
+  courses = ['Angular', 'React', 'Vue', 'Node.js'];
+
+  @Output() courseRegistered = new EventEmitter<string>();
+
+  register(courseName: string) {
+    this.courseRegistered.emit(courseName);
+  }
+}
+```
+
+##### `courses-list.component.html`
+```html
+<table>
+  <tr>
+    <th>Course Name</th>
+    <th>Action</th>
+  </tr>
+  <tr *ngFor="let course of courses">
+    <td>{{ course }}</td>
+    <td>
+      <button (click)="register(course)">Register</button>
+    </td>
+  </tr>
+</table>
+```
+
+---
+
+### **Explanation**
+1. **AppComponent**:
+   - Contains the parent logic and listens for the `courseRegistered` event emitted by `CoursesListComponent`.
+   - Displays the registration success message.
+
+2. **CoursesListComponent**:
+   - Displays the list of courses in a table format.
+   - Emits the `courseName` value using an `EventEmitter` when the "Register" button is clicked.
+
+3. **Event Binding**:
+   - The `courseRegistered` event is bound in `AppComponent` using `(courseRegistered)` to handle the data received from `CoursesListComponent`.
+
+---
+
+### **Output**
+- The `CoursesListComponent` displays the courses table with "Register" buttons.
+- On clicking "Register," the `AppComponent` updates the message as:
+  ```
+  Registration Successful for Angular
+  ```
+
