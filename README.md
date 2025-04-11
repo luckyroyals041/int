@@ -105,8 +105,6 @@ int main() {
 Parsed Expression Tree: ((3 + (5 * 2)) - 8)
 ```
 
----
-
 ### **2. Lexical Analyzer using Flex**
 **AIM:**  
 To create a lexical analyzer using Flex that identifies keywords, operators, numbers, and identifiers from a given input program.
