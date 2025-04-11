@@ -126,14 +126,16 @@ OPERATOR   (\+|\-|\*|\/|\=)
 {OPERATOR}  { printf("Operator: %s\n", yytext); }
 [0-9]+      { printf("Number: %s\n", yytext); }
 [a-zA-Z_][a-zA-Z_0-9]* { printf("Identifier: %s\n", yytext); }
-[ \t\n]     ;  /* Ignore whitespace */
-.           { printf("Unknown character: %s\n", yytext); }
+[ \t\n]      { printf("Unknown character: %s\n", yytext); }
 
 %%
 
 int main() {
     yylex();  /* Start lexical analysis */
     return 0;
+}
+int yywrap() {
+    return 1;  // Indicate the end of input.
 }
 ```
 
