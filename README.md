@@ -86,17 +86,21 @@ void parse(char *expression) {
 }
 
 int main() {
-    char expression[] = "3 + 5 * 2 - 8";  // Example input
-    
+    char expression[MAX_STACK_SIZE];
+
+    // Prompt the user for input
+    printf("Enter an arithmetic expression (with spaces between tokens):\n");
+    fgets(expression, MAX_STACK_SIZE, stdin);
+
+    // Remove trailing newline character
+    expression[strcspn(expression, "\n")] = '\0';
+
     parse(expression);
     printf("Parsed Expression Tree: %s\n", operandStack[operandTop]);
     
     return 0;
 }
-```
 
-**OUTPUT:**  
-For input expression `3 + 5 * 2 - 8`, the program outputs:  
 ```
 Parsed Expression Tree: ((3 + (5 * 2)) - 8)
 ```
