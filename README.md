@@ -1,608 +1,159 @@
-# 1. Displaying a List of Courses
+---
 
-This Angular application demonstrates the creation of a simple component that displays a list of courses using the `*ngFor` structural directive.
+### **1. Operator Precedence Parser in C**
+**AIM:**  
+To implement a top-down parser using operator precedence for arithmetic expressions.
 
-## Steps to Create the Application
+**DESCRIPTION:**  
+The program uses two stacks, one for operators and another for operands, to parse arithmetic expressions based on operator precedence rules. It dynamically constructs the parse tree as a string representation of sub-expressions. The input expression is tokenized, and operators are reduced based on precedence to maintain the correct order of operations.
 
-1. **Create a New Angular Application**  
-    Use the Angular CLI command to create a new application:
-    ```bash
-    ng new app1
-    cd app1
-    ```
+**PROGRAM:**
+```c
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
 
-2. **Update `app.component.html`**  
-    Add the following code to the `app.component.html` file:
-    ```html
-    <h2>Courses</h2>
-    <ol>
-         <li *ngFor="let course of courses">
-              {{ course }}
-         </li>
-    </ol>
-    ```
+#define MAX_STACK_SIZE 100
 
-3. **Update `app.component.ts`**  
-    Add the following code to the `app.component.ts` file:
-    ```typescript
-    import { Component } from '@angular/core';
-    import { CommonModule } from '@angular/common';
+// Stack for operators and operands
+char operatorStack[MAX_STACK_SIZE];
+char operandStack[MAX_STACK_SIZE][MAX_STACK_SIZE];
+int operatorTop = -1, operandTop = -1;
 
-    @Component({
-         selector: 'app-root',
-         imports: [CommonModule],
-         templateUrl: './app.component.html',
-         styleUrls: ['./app.component.css']
-    })
-    export class AppComponent {
-         title = 'app1';
-         courses = ['course1', 'course2', 'course3'];
+// Precedence table
+int precedence(char op) {
+    switch (op) {
+        case '+': return 1;
+        case '-': return 1;
+        case '*': return 2;
+        case '/': return 2;
+        default: return -1;
     }
-    ```
+}
 
-## Output
+// Push operator onto stack
+void pushOperator(char op) {
+    operatorStack[++operatorTop] = op;
+}
 
-When you run the application, it will display a list of courses (`course1`, `course2`, `course3`) in an ordered list.
+// Pop operator from stack
+char popOperator() {
+    return operatorStack[operatorTop--];
+}
 
+// Push operand onto stack
+void pushOperand(char *operand) {
+    strcpy(operandStack[++operandTop], operand);
+}
 
-# 2. Employee Registration Form
+// Pop operand from stack
+char *popOperand() {
+    return operandStack[operandTop--];
+}
 
-This documentation provides step-by-step instructions for creating an Angular application with an employee registration form using reactive forms.
-
-## Prerequisites
-
-Ensure you have Angular CLI installed. If not, install it using:
-
-```bash
-npm install -g @angular/cli
-```
-
-## Steps to Create the Application
-
-### 1. Project Setup
-
-1. Create a new Angular project:
-    ```bash
-    ng new app2 --no-standalone
-    ```
-2. Navigate to the project directory:
-    ```bash
-    cd app2
-    ```
-3. Generate a new component named `employee-registration`:
-    ```bash
-    ng generate component employee-registration
-    ```
-    or use the shorthand:
-    ```bash
-    ng g c employee-registration
-    ```
-
-### 2. Component Implementation
-
-1. Open the `employee-registration.component.ts` file and add the following code:
-
-    ```typescript
-    import { Component } from '@angular/core';
-    import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-
-    @Component({
-      selector: 'app-employee-registration',
-      standalone: false,
-      templateUrl: './employee-registration.component.html',
-      styleUrls: ['./employee-registration.component.css']
-    })
-    export class EmployeeRegistrationComponent {
-      employeeForm: FormGroup;
-
-      constructor(private fb: FormBuilder) {
-         this.employeeForm = this.fb.group({
-            email: ['', [Validators.required, this.emailValidator]]
-         });
-      }
-
-      emailValidator(control: AbstractControl) {
-         if (!control.value.includes('@')) {
-            return { invalidEmail: true };
-         }
-         return null;
-      }
-
-      onSubmit() {
-         if (this.employeeForm.valid) {
-            console.log(this.employeeForm.value);
-         }
-      }
-    }
-    ```
-
-### 3. Template Setup
-
-1. Open the `employee-registration.component.html` file and add the following code:
-
-    ```html
-    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-      <div>
-         <label for="email">Email:</label>
-         <input type="email" id="email" formControlName="email">
-         
-         <div *ngIf="employeeForm.get('email')?.touched">
-            <div *ngIf="employeeForm.get('email')?.errors?.['required']">
-              Email is required
-            </div>
-            <div *ngIf="employeeForm.get('email')?.errors?.['invalidEmail']">
-              Please include &#64; in email
-            </div>
-         </div>
-      </div>
+// Perform reduction and construct subexpression
+void reduce() {
+    char operator = popOperator();
+    char *rightOperand = popOperand();
+    char *leftOperand = popOperand();
     
-      <button type="submit" [disabled]="!employeeForm.valid">Submit</button>
-    </form>
-    ```
-
-### 4. Module Configuration
-
-1. Open the `app.module.ts` file and add the following code:
-
-    ```typescript
-    import { NgModule } from '@angular/core';
-    import { BrowserModule, provideClientHydration, withEventReplay } from '@angular/platform-browser';
-    import { ReactiveFormsModule } from '@angular/forms';
-    import { AppRoutingModule } from './app-routing.module';
-    import { AppComponent } from './app.component';
-    import { EmployeeRegistrationComponent } from './employee-registration/employee-registration.component';
-
-    @NgModule({
-      declarations: [
-         AppComponent,
-         EmployeeRegistrationComponent
-      ],
-      imports: [
-         BrowserModule,
-         AppRoutingModule,
-         ReactiveFormsModule
-      ],
-      providers: [
-         provideClientHydration(withEventReplay())
-      ],
-      bootstrap: [AppComponent]
-    })
-    export class AppModule { }
-    ```
-
-### 5. Application Integration
-
-1. Open the `app.component.html` file and add the following code:
-
-    ```html
-    <app-employee-registration></app-employee-registration>
-    ```
-
-## Summary
-
-By following these steps, you will create a functional employee registration form with email validation in an Angular application. This form uses reactive forms to handle validation and submission effectively.
-
-
-# 3. Style Encapsulation Demo
-
-This project demonstrates the use of Angular's `ViewEncapsulation` options to control style isolation in components. It includes two components: one using Shadow DOM encapsulation and another with no encapsulation. The differences in style behavior are highlighted through a simple example.
-
-## Project Setup
-
-1. Create a new Angular application:
-     ```bash
-     ng new app3
-     cd app3
-     ```
-
-2. Generate two components:
-     ```bash
-     ng generate component shadow-box
-     ng generate component no-shadow-box
-     ```
-
-## File to be Update
-1. **ShadowBox Component**
-- **File**: `shadow-box.component.ts`
-```typescript
-import { Component, ViewEncapsulation } from '@angular/core';
-
-@Component({
-  selector: 'app-shadow-box',
-  template: `
-    <div class="box">
-      <h2>Shadow DOM Box</h2>
-      <p>This text is blue and styles won't leak!</p>
-    </div>
-  `,
-  styles: [`
-    .box {
-      border: 2px solid blue;
-      padding: 20px;
-      margin: 10px;
-    }
-    p {
-      color: blue;
-    }
-  `],
-  encapsulation: ViewEncapsulation.ShadowDom
-})
-export class ShadowBoxComponent { }
-
-```
-- **Encapsulation**: `ViewEncapsulation.ShadowDom`
-- **Behavior**:
-  - Styles are encapsulated within the component using Shadow DOM.
-  - Blue styles are applied only to this component and do not affect other parts of the application.
-
-2. **NoShadowBox Component**
-- **File**: `no-shadow-box.component.ts`
-```typescript
-import { Component, ViewEncapsulation } from '@angular/core';
-
-@Component({
-  selector: 'app-no-shadow-box',
-  template: `
-    <div class="box">
-      <h2>No Encapsulation Box</h2>
-      <p>This text is red and styles will leak!</p>
-    </div>
-  `,
-  styles: [`
-    .box {
-      border: 2px solid red;
-      padding: 20px;
-      margin: 10px;
-    }
-    p {
-      color: red;
-    }
-  `],
-  encapsulation: ViewEncapsulation.None
-})
-export class NoShadowBoxComponent { }
-
-```
-- **Encapsulation**: `ViewEncapsulation.None`
-- **Behavior**:
-  - Styles are not encapsulated and will leak to other parts of the application.
-  - Red styles affect any matching elements globally.
-3. **App Component**:
-     - **File**: `app.component.html`
-     ```html
-     <h1>Style Encapsulation Demo</h1>
-     
-     <app-shadow-box></app-shadow-box>
-     <app-no-shadow-box></app-no-shadow-box>
-     
-     <!-- Test div to show style leaking -->
-     <div class="box">
-       <h2>Regular Box</h2>
-       <p>This text will be affected by NoEncapsulation styles</p>
-     </div>
-     
-     ```
-     - Includes both `ShadowBox` and `NoShadowBox` components.
-     - Contains a regular box to demonstrate style leakage from the `NoShadowBox` component.
-
-4. **App Module**:
-     - **File**: `app.module.ts`
-     ```typescript
-     import { NgModule } from '@angular/core';
-     import { BrowserModule } from '@angular/platform-browser';
-     import { AppComponent } from './app.component';
-     import { ShadowBoxComponent } from './shadow-box/shadow-box.component';
-     import { NoShadowBoxComponent } from './no-shadow-box/no-shadow-box.component';
-     
-     @NgModule({
-       declarations: [
-         AppComponent,
-         ShadowBoxComponent,
-         NoShadowBoxComponent
-       ],
-       imports: [
-         BrowserModule
-       ],
-       bootstrap: [AppComponent]
-     })
-     export class AppModule { }
-     
-     ```
-     - Declares and imports the components.
-
-## Running the Application
-
-1. Start the development server:
-     ```bash
-     $ ng serve
-     ```
-
-2. Open the application in your browser at `http://localhost:4200`.
-
-## Key Observations
-
-1. **ShadowBox Component**:
-     - Uses Shadow DOM encapsulation (`ViewEncapsulation.ShadowDom`).
-     - Blue styles remain isolated within the component.
-     - Other components are not affected by these styles.
-
-2. **NoShadowBox Component**:
-     - Uses no encapsulation (`ViewEncapsulation.None`).
-     - Red styles leak to other components and affect any matching elements in the application.
-
-3. **Regular Box**:
-     - Demonstrates the effect of style leakage from the `NoShadowBox` component.
-     - The text and border turn red due to the leaked styles.
-
-## Inspecting the DOM
-
-- Use browser developer tools to inspect the elements.
-- Observe the Shadow DOM boundary for the `ShadowBox` component.
-- Notice the absence of encapsulation for the `NoShadowBox` component.
-
-## Summary
-
-This project highlights the differences between Angular's style encapsulation options:
-- **Shadow DOM (`ViewEncapsulation.ShadowDom`)**: Ensures style isolation within the component.
-- **No Encapsulation (`ViewEncapsulation.None`)**: Allows styles to leak and affect other components.
-
-By comparing the behavior of these two components, you can better understand how to manage style isolation in Angular applications.
-
-# Image Binding 
-```ts
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-image-binding',
-  templateUrl: './image-binding.component.html',
-  styleUrls: ['./image-binding.component.css']
-})
-export class ImageBindingComponent {
-  imageUrl: string = 'https://via.placeholder.com/150';
-
-  changeImage() {
-    this.imageUrl = 'https://via.placeholder.com/300';
-  }
-}
-```
-```html
-<div>
-  <img [src]="imageUrl" alt="Dynamic Image" />
-  <button (click)="changeImage()">Change Image</button>
-</div>
-```
-
-
-# Employee Registration Form 
-```ts
-import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-
-@Component({
-  selector: 'app-employee-registration',
-  templateUrl: './employee-registration.component.html',
-  styleUrls: ['./employee-registration.component.css']
-})
-export class EmployeeRegistrationComponent {
-  employeeForm = new FormGroup({
-    name: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z ]*')]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    phone: new FormControl('', [Validators.required, Validators.pattern('[0-9]{10}')]),
-    designation: new FormControl('', Validators.required),
-    address: new FormControl('', Validators.required),
-  });
-
-  onSubmit() {
-    console.log(this.employeeForm.value);
-  }
-}
-```
-```html
-<div>
-  <h2>Employee Registration Form</h2>
-  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
-    <label for="name">Name:</label>
-    <input id="name" type="text" formControlName="name" />
-    <div *ngIf="employeeForm.get('name')?.invalid && employeeForm.get('name')?.touched">
-      <small *ngIf="employeeForm.get('name')?.errors?.['required']">Name is required.</small>
-      <small *ngIf="employeeForm.get('name')?.errors?.['pattern']">Only letters are allowed.</small>
-    </div>
-
-    <label for="email">Email:</label>
-    <input id="email" type="email" formControlName="email" />
-    <div *ngIf="employeeForm.get('email')?.invalid && employeeForm.get('email')?.touched">
-      <small *ngIf="employeeForm.get('email')?.errors?.['required']">Email is required.</small>
-      <small *ngIf="employeeForm.get('email')?.errors?.['email']">Invalid email format.</small>
-    </div>
-
-    <label for="phone">Phone:</label>
-    <input id="phone" type="text" formControlName="phone" />
-    <div *ngIf="employeeForm.get('phone')?.invalid && employeeForm.get('phone')?.touched">
-      <small *ngIf="employeeForm.get('phone')?.errors?.['required']">Phone number is required.</small>
-      <small *ngIf="employeeForm.get('phone')?.errors?.['pattern']">Enter a valid 10-digit number.</small>
-    </div>
-
-    <label for="designation">Designation:</label>
-    <input id="designation" type="text" formControlName="designation" />
-    <div *ngIf="employeeForm.get('designation')?.invalid && employeeForm.get('designation')?.touched">
-      <small>Designation is required.</small>
-    </div>
-
-    <label for="address">Address:</label>
-    <textarea id="address" formControlName="address"></textarea>
-    <div *ngIf="employeeForm.get('address')?.invalid && employeeForm.get('address')?.touched">
-      <small>Address is required.</small>
-    </div>
-
-    <button type="submit" [disabled]="employeeForm.invalid">Register</button>
-  </form>
-</div>
-```
-# Login Form
-### app.component.ts
-```ts
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
-})
-export class LoginComponent {
-  username: string = '';
-  password: string = '';
-  message: string = '';
-
-  // Predefined correct credentials
-  correctUsername: string = 'user123';
-  correctPassword: string = 'password123';
-
-  onLogin() {
-    if (this.username === this.correctUsername && this.password === this.correctPassword) {
-      this.message = `Welcome ${this.username}`;
-    } else {
-      this.message = 'Invalid Login!!! Please try again...';
-    }
-  }
-}
-```
-### app.component.html
-```html
-<div>
-  <h2>Login Form</h2>
-  <form (ngSubmit)="onLogin()">
-    <label for="username">Username:</label>
-    <input id="username" type="text" [(ngModel)]="username" name="username" required />
+    char subexpression[MAX_STACK_SIZE];
+    sprintf(subexpression, "(%s %c %s)", leftOperand, operator, rightOperand);
     
-    <label for="password">Password:</label>
-    <input id="password" type="password" [(ngModel)]="password" name="password" required />
+    pushOperand(subexpression);
+}
 
-    <button type="submit">Login</button>
-  </form>
+// Parse the expression
+void parse(char *expression) {
+    char *token = strtok(expression, " ");
+    while (token) {
+        if (isdigit(token[0])) {  // Operand
+            pushOperand(token);
+        } else {  // Operator
+            while (operatorTop != -1 &&
+                   precedence(operatorStack[operatorTop]) >= precedence(token[0])) {
+                reduce();
+            }
+            pushOperator(token[0]);
+        }
+        token = strtok(NULL, " ");
+    }
+    
+    // Reduce remaining operators
+    while (operatorTop != -1) {
+        reduce();
+    }
+}
 
-  <p>{{ message }}</p>
-</div>
-```
-### app.module.ts
-```ts
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { FormsModule } from '@angular/forms';
-import { AppComponent } from './app.component';
-import { LoginComponent } from './login/login.component';
-
-@NgModule({
-  declarations: [AppComponent, LoginComponent],
-  imports: [BrowserModule, FormsModule],
-  providers: [],
-  bootstrap: [AppComponent]
-})
-export class AppModule {}
-```
-
----
-# Course list Registration 
-### **Aim**
-To create an Angular app where the `AppComponent` loads the `CoursesListComponent`, which displays a list of courses in a table. Each row includes a "Register" button that sends the course name back to `AppComponent`. The `AppComponent` then displays a "Registration Successful" message with the course name.
-
----
-
-### **Description**
-This app involves component interaction in Angular, showcasing parent-child communication using event binding and property binding. The `CoursesListComponent` acts as the child component and passes data (courseName) back to the parent (`AppComponent`) using `@Output` and an event emitter. The parent component displays the message based on the data received from the child component.
-
----
-
-### **Program**
-
-#### **1. AppComponent**
-
-##### `app.component.ts`
-```typescript
-import { Component } from '@angular/core';
-
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
-})
-export class AppComponent {
-  registrationMessage: string = '';
-
-  onCourseRegistered(courseName: string) {
-    this.registrationMessage = `Registration Successful for ${courseName}`;
-  }
+int main() {
+    char expression[] = "3 + 5 * 2 - 8";  // Example input
+    
+    parse(expression);
+    printf("Parsed Expression Tree: %s\n", operandStack[operandTop]);
+    
+    return 0;
 }
 ```
 
-##### `app.component.html`
-```html
-<div>
-  <h1>Course Registration</h1>
-  <app-courses-list (courseRegistered)="onCourseRegistered($event)"></app-courses-list>
-  <p>{{ registrationMessage }}</p>
-</div>
+**OUTPUT:**  
+For input expression `3 + 5 * 2 - 8`, the program outputs:  
+```
+Parsed Expression Tree: ((3 + (5 * 2)) - 8)
 ```
 
 ---
 
-#### **2. CoursesListComponent**
+### **2. Lexical Analyzer using Flex**
+**AIM:**  
+To create a lexical analyzer using Flex that identifies keywords, operators, numbers, and identifiers from a given input program.
 
-##### `courses-list.component.ts`
-```typescript
-import { Component, EventEmitter, Output } from '@angular/core';
+**DESCRIPTION:**  
+This program uses Flex to tokenize input text into predefined categories like keywords (e.g., `int`, `if`, `while`), operators (e.g., `+`, `-`, `*`, `/`, `=`), numbers, and identifiers. It uses regular expressions to match patterns and outputs the matched token type for each input.
 
-@Component({
-  selector: 'app-courses-list',
-  templateUrl: './courses-list.component.html',
-  styleUrls: ['./courses-list.component.css']
-})
-export class CoursesListComponent {
-  courses = ['Angular', 'React', 'Vue', 'Node.js'];
+**PROGRAM:**
+```flex
+%{
+#include <stdio.h>
+%}
 
-  @Output() courseRegistered = new EventEmitter<string>();
+/* Keywords and Operators */
+KEYWORD    (int|if|while|return|else)
+OPERATOR   (\+|\-|\*|\/|\=)
 
-  register(courseName: string) {
-    this.courseRegistered.emit(courseName);
-  }
+%%
+
+{KEYWORD}   { printf("Keyword: %s\n", yytext); }
+{OPERATOR}  { printf("Operator: %s\n", yytext); }
+[0-9]+      { printf("Number: %s\n", yytext); }
+[a-zA-Z_][a-zA-Z_0-9]* { printf("Identifier: %s\n", yytext); }
+[ \t\n]     ;  /* Ignore whitespace */
+.           { printf("Unknown character: %s\n", yytext); }
+
+%%
+
+int main() {
+    yylex();  /* Start lexical analysis */
+    return 0;
 }
 ```
 
-##### `courses-list.component.html`
-```html
-<table>
-  <tr>
-    <th>Course Name</th>
-    <th>Action</th>
-  </tr>
-  <tr *ngFor="let course of courses">
-    <td>{{ course }}</td>
-    <td>
-      <button (click)="register(course)">Register</button>
-    </td>
-  </tr>
-</table>
+**OUTPUT:**  
+For input text:  
+```
+int x = 5 + y;
+```
+The output will be:  
+```
+Keyword: int
+Identifier: x
+Operator: =
+Number: 5
+Operator: +
+Identifier: y
+Unknown character: ;
 ```
 
 ---
 
-### **Explanation**
-1. **AppComponent**:
-   - Contains the parent logic and listens for the `courseRegistered` event emitted by `CoursesListComponent`.
-   - Displays the registration success message.
-
-2. **CoursesListComponent**:
-   - Displays the list of courses in a table format.
-   - Emits the `courseName` value using an `EventEmitter` when the "Register" button is clicked.
-
-3. **Event Binding**:
-   - The `courseRegistered` event is bound in `AppComponent` using `(courseRegistered)` to handle the data received from `CoursesListComponent`.
-
----
-
-### **Output**
-- The `CoursesListComponent` displays the courses table with "Register" buttons.
-- On clicking "Register," the `AppComponent` updates the message as:
-  ```
-  Registration Successful for Angular
-  ```
-
+Let me know if you'd like further clarification or enhancements to the programs! 😊
